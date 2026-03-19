@@ -42,3 +42,6 @@ npm-debug.log
 # Playwright MCP temp files (screenshots, console logs)
 .playwright-mcp/
 
+# Private docs (provisorio, no se commitean)
+/docs/private/
+
