@@ -38,6 +38,7 @@ npm-debug.log
 # Environment secrets
 .env.local
 .env.*.local
+.env.k8s.*
 
 # Playwright MCP temp files (screenshots, console logs)
 .playwright-mcp/
