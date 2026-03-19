@@ -13,7 +13,7 @@ echo "==> Starting PostgreSQL..."
 docker compose up db -d
 
 echo "==> Waiting for PostgreSQL..."
-until docker exec argentic-ui-framework-db-1 pg_isready -U postgres &>/dev/null; do
+until docker compose exec db pg_isready -U postgres &>/dev/null; do
   sleep 1
 done
 echo "    PostgreSQL ready"
