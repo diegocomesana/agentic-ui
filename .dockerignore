@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+
+# Build artifacts
+_build
+deps
+
+# Node modules (assets)
+assets/node_modules
+
+# Generated static files (will be rebuilt)
+priv/static/assets
+
+# IDE / Editor
+.elixir_ls
+.vscode
+.idea
+
+# Environment files (secrets — passed via env_file or env vars)
+.env.local
+
+# Docs and tests
+docs
+test
+research
+README.md
+CLAUDE.md
+AGENTS.md
+
+# Playwright MCP logs/screenshots
+.playwright-mcp
+
+# Claude memory
+.claude
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore

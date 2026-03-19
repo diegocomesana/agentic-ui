@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic UI — Architecture</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #0a0e1a;
+    color: #e0e6f0;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  h1 { text-align: center; font-size: 36px; font-weight: 700; margin-bottom: 10px; color: #fff; }
+  .subtitle { text-align: center; font-size: 17px; color: #7a8ba8; margin-bottom: 50px; }
+
+  /* ── Diagram ── */
+  .diagram { position: relative; max-width: 1400px; margin: 0 auto 70px; }
+  .arrows-svg {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 1;
+  }
+  .grid { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 80px; }
+  .row { display: flex; justify-content: center; gap: 30px; }
+  .box {
+    padding: 18px 22px; border-radius: 14px; border: 2px solid;
+    text-align: center; font-size: 14px; line-height: 1.7;
+  }
+  .box b { font-size: 15px; }
+  .row-1 .box, .row-2 .box { width: 280px; }
+  .row-3 .box { width: 340px; }
+  #box-WIDGETS { width: 560px; }
+  #box-USER { width: 270px; border-radius: 40px; }
+
+  /* ── Box colors ── */
+  #box-PG        { background:#14142a; border-color:#64748b; color:#94a3b8; }
+  #box-STORE     { background:#261808; border-color:#fbbf24; color:#fde68a; }
+  #box-AGENT     { background:#0a253d; border-color:#38bdf8; color:#7dd3fc; }
+  #box-MCP       { background:#141a28; border-color:#06b6d4; color:#67e8f9; }
+  #box-SERVICES  { background:#152815; border-color:#4ade80; color:#86efac; }
+  #box-APIS      { background:#14142a; border-color:#64748b; color:#94a3b8; }
+  #box-RENDERER  { background:#1e0f35; border-color:#c084fc; color:#e9d5ff; }
+  #box-DESCRIPTORS { background:#142414; border-color:#f59e0b; color:#fbbf24; }
+  #box-ENGINE    { background:#1a1340; border-color:#6d5acd; color:#c4b5fd; }
+  #box-WIDGETS   { background:#1a0c2d; border-color:#a78bfa; color:#c4b5fd; }
+  #box-USER      { background:#1a2438; border-color:#475569; color:#f1f5f9; }
+
+  /* ── Flow cards ── */
+  .flows { max-width: 1400px; margin: 0 auto 24px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+  .flow-card { border-radius: 14px; padding: 24px; background: #111827; border: 1px solid #1f2937; }
+  .flow-card h4 { font-size: 17px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .flow-card .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .flow-card ol { font-size: 14px; line-height: 1.8; padding-left: 20px; color: #a0aec0; }
+  .flow-card .note { font-size: 13px; color: #64748b; margin-top: 10px; font-style: italic; }
+
+  .info-grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .info-box { padding: 24px; background: #111827; border-radius: 14px; border: 1px solid #1f2937; }
+  .info-box h4 { font-size: 16px; margin-bottom: 12px; }
+  .info-box p  { font-size: 14px; line-height: 1.8; color: #a0aec0; }
+
+  @media (max-width: 1000px) {
+    .flows { grid-template-columns: 1fr; }
+    .info-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Agentic UI — Architecture</h1>
+<p class="subtitle">One descriptor per widget · Engine writes, Renderer reads</p>
+
+<div class="diagram" id="diagram">
+  <svg class="arrows-svg" id="arrows-svg" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="ae" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="10" markerHeight="6" orient="auto">
+        <path d="M0 0 L10 3 L0 6z" fill="#64748b"/>
+      </marker>
+      <marker id="as" viewBox="0 0 10 6" refX="0" refY="3" markerWidth="10" markerHeight="6" orient="auto">
+        <path d="M10 0 L0 3 L10 6z" fill="#64748b"/>
+      </marker>
+    </defs>
+  </svg>
+
+  <div class="grid">
+    <div class="row row-1">
+      <div class="box" id="box-PG"><b>PostgreSQL</b><br>guest_users · sessions (JSONB)</div>
+      <div class="box" id="box-STORE"><b>CENTRAL STORE</b><br>Single source of truth<br>widgets · layout · conversation · cart · wishlist<br><i>Only the Engine writes to it</i></div>
+    </div>
+    <div class="row row-2">
+      <div class="box" id="box-AGENT"><b>AGENT (LLM)</b><br>Stateless · Provider-agnostic<br>Gets everything from Engine</div>
+      <div class="box" id="box-MCP"><b>MCP TOOLS</b><br>Wraps services as tools<br>Provider-agnostic format</div>
+      <div class="box" id="box-SERVICES"><b>SERVICES</b><br>Shared pure functions<br>ETS cache (5 min TTL)</div>
+      <div class="box" id="box-APIS"><b>External APIs</b></div>
+    </div>
+    <div class="row row-3">
+      <div class="box" id="box-RENDERER"><b>RENDERER</b><br>Reads store + descriptors<br>Read-only</div>
+      <div class="box" id="box-DESCRIPTORS"><b>DESCRIPTORS</b><br>One file per widget type<br>component · data_source · events · reducers</div>
+      <div class="box" id="box-ENGINE"><b>ENGINE</b><br>Only writer to the Store<br>Processes events · Resolves data</div>
+    </div>
+    <div class="row row-4">
+      <div class="box" id="box-WIDGETS"><b>WIDGETS (UI)</b><br>14 HEEx function components · Emit events · Dumb &amp; presentational</div>
+    </div>
+    <div class="row row-5">
+      <div class="box" id="box-USER"><b>USER</b><br>Chat · Clicks · Voice</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ FLOWS ════ -->
+<div class="flows">
+  <div class="flow-card">
+    <h4><span class="dot" style="background:#38bdf8;"></span> Conversational Flow</h4>
+    <ol>
+      <li>User types/speaks → Widget emits ↑</li>
+      <li>Engine builds context (snapshot + catalog)</li>
+      <li>Engine invokes agent with MCP tools</li>
+      <li>Agent responds: message + widgets + layout</li>
+      <li>Engine applies → <b>writes new store</b></li>
+      <li>Renderer reads store → maps components ↓</li>
+      <li>Widgets re-render</li>
+    </ol>
+    <p class="note">Agent receives everything from Engine. Never reads store or descriptors.</p>
+  </div>
+  <div class="flow-card">
+    <h4><span class="dot" style="background:#4ade80;"></span> Mechanical Flow</h4>
+    <ol>
+      <li>User clicks → Widget emits action ↑</li>
+      <li>Engine reads descriptor → mechanical</li>
+      <li>Applies config change → calls service</li>
+      <li>Receives data → <b>writes store</b></li>
+      <li>Renderer reads store → maps components ↓</li>
+      <li>Widgets update</li>
+    </ol>
+    <p class="note">No agent involved. Engine writes, Renderer reads. Instant.</p>
+  </div>
+  <div class="flow-card">
+    <h4><span class="dot" style="background:#f472b6;"></span> Semantic Flow</h4>
+    <ol>
+      <li>Widget emits semantic action ↑</li>
+      <li>Engine reads descriptor → semantic</li>
+      <li>Same flow as conversational (2-7)</li>
+    </ol>
+    <p class="note">Descriptor classifies. Engine decides whether to invoke agent.</p>
+  </div>
+</div>
+
+<!-- ════ INFO ════ -->
+<div class="info-grid">
+  <div class="info-box">
+    <h4 style="color:#fbbf24;">Descriptor: the core abstraction</h4>
+    <p>One descriptor + one component per widget. Feeds two direct consumers:
+      <b>Engine</b> (data_source, events, reducers, spawn_actions, agent_view) and <b>Renderer</b> (component).
+      The agent never reads descriptors — it receives the catalog assembled by the Engine.</p>
+  </div>
+  <div class="info-box">
+    <h4 style="color:#c4b5fd;">Engine: the only writer</h4>
+    <p>The Engine is the only module that writes to the store.
+      The agent proposes, services return data — the Engine applies everything.
+      The Renderer only reads and reacts.</p>
+  </div>
+  <div class="info-box">
+    <h4 style="color:#7dd3fc;">Agent: knows nothing about the system</h4>
+    <p>Doesn't know about the Store or Descriptors. Gets everything from the Engine as parameters:
+      snapshot, catalog, conversation, tools. Responds with a UI declaration.</p>
+  </div>
+  <div class="info-box">
+    <h4 style="color:#94a3b8;">Persistence</h4>
+    <p>Dual mode: in-memory (GenServer with undo history) + optional PostgreSQL.
+      Guest users identified by UUID cookie. Store serialized as JSONB.
+      Async background persist — never blocks the UI.</p>
+  </div>
+</div>
+
+<p style="text-align:center;margin:30px 0 20px;font-size:11px;color:#475569;">
+  Agentic UI Framework · Phoenix LiveView · Elixir
+</p>
+
+<script>
+function drawArrows() {
+  var svg = document.getElementById('arrows-svg');
+  var dr = document.getElementById('diagram').getBoundingClientRect();
+
+  // Clear old paths (keep defs)
+  var old = svg.querySelectorAll('path.arr');
+  for (var i = 0; i < old.length; i++) svg.removeChild(old[i]);
+
+  // Connection point helper
+  function p(id, side, off) {
+    if (off === undefined) off = 0.5;
+    var r = document.getElementById(id).getBoundingClientRect();
+    var x = r.left - dr.left, y = r.top - dr.top;
+    if (side === 'top')    return [x + r.width * off, y];
+    if (side === 'bottom') return [x + r.width * off, y + r.height];
+    if (side === 'left')   return [x, y + r.height * off];
+    if (side === 'right')  return [x + r.width, y + r.height * off];
+  }
+
+  // Draw a path
+  function arrow(d, bidir) {
+    var el = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    el.setAttribute('class', 'arr');
+    el.setAttribute('d', d);
+    el.setAttribute('fill', 'none');
+    el.setAttribute('stroke', '#64748b');
+    el.setAttribute('stroke-width', '1.5');
+    el.setAttribute('stroke-linejoin', 'round');
+    el.setAttribute('marker-end', 'url(#ae)');
+    if (bidir) el.setAttribute('marker-start', 'url(#as)');
+    svg.appendChild(el);
+  }
+
+  // Straight line
+  function line(a, b, bidir) {
+    arrow('M' + a[0] + ' ' + a[1] + ' L' + b[0] + ' ' + b[1], bidir);
+  }
+
+  // Orthogonal path with rounded corners
+  function ortho(pts, bidir) {
+    var R = 8;
+    var d = 'M' + pts[0][0] + ' ' + pts[0][1];
+    for (var i = 1; i < pts.length - 1; i++) {
+      var px = pts[i-1][0], py = pts[i-1][1];
+      var cx = pts[i][0],   cy = pts[i][1];
+      var nx = pts[i+1][0], ny = pts[i+1][1];
+      var dx1 = cx - px, dy1 = cy - py;
+      var dx2 = nx - cx, dy2 = ny - cy;
+      var len1 = Math.abs(dx1) + Math.abs(dy1);
+      var len2 = Math.abs(dx2) + Math.abs(dy2);
+      var r = Math.min(R, len1 / 3, len2 / 3);
+      var sx1 = dx1 === 0 ? 0 : (dx1 > 0 ? 1 : -1);
+      var sy1 = dy1 === 0 ? 0 : (dy1 > 0 ? 1 : -1);
+      var sx2 = dx2 === 0 ? 0 : (dx2 > 0 ? 1 : -1);
+      var sy2 = dy2 === 0 ? 0 : (dy2 > 0 ? 1 : -1);
+      var ax = cx - sx1 * r, ay = cy - sy1 * r;
+      var bx = cx + sx2 * r, by = cy + sy2 * r;
+      d += ' L' + ax + ' ' + ay + ' Q' + cx + ' ' + cy + ' ' + bx + ' ' + by;
+    }
+    d += ' L' + pts[pts.length-1][0] + ' ' + pts[pts.length-1][1];
+    arrow(d, bidir);
+  }
+
+  // ── Same-row horizontal ──
+  line(p('box-PG','right'), p('box-STORE','left'), true);
+  line(p('box-AGENT','right'), p('box-MCP','left'), true);
+  line(p('box-MCP','right'), p('box-SERVICES','left'), true);
+  line(p('box-SERVICES','right'), p('box-APIS','left'), true);
+  line(p('box-DESCRIPTORS','right'), p('box-ENGINE','left'), true);
+
+  // ── Adjacent-row straight ──
+  line(p('box-ENGINE','top',0.5), p('box-SERVICES','bottom',0.5), true);
+  line(p('box-USER','top'), p('box-WIDGETS','bottom',0.5), true);
+  line(p('box-WIDGETS','top',0.7), p('box-ENGINE','bottom',0.5), false);
+  line(p('box-RENDERER','bottom',0.5), p('box-WIDGETS','top',0.3), false);
+
+  // ── ENGINE ↔ AGENT: orthogonal through gap ──
+  var ea1 = p('box-ENGINE','top',0.15);
+  var ea2 = p('box-AGENT','bottom',0.5);
+  var gapY = (ea1[1] + ea2[1]) / 2;
+  ortho([ea1, [ea1[0], gapY], [ea2[0], gapY], ea2], true);
+
+  // ── ENGINE ↔ STORE: route right margin ──
+  var es1 = p('box-ENGINE','top',0.85);
+  var es2 = p('box-STORE','bottom',0.8);
+  var mR = dr.width - 15;
+  ortho([es1, [es1[0], es1[1]-30], [mR, es1[1]-30], [mR, es2[1]+30], [es2[0], es2[1]+30], es2], true);
+
+  // ── STORE → RENDERER: route left margin ──
+  var sr1 = p('box-STORE','bottom',0.2);
+  var sr2 = p('box-RENDERER','top',0.5);
+  var mL = 15;
+  ortho([sr1, [sr1[0], sr1[1]+30], [mL, sr1[1]+30], [mL, sr2[1]-30], [sr2[0], sr2[1]-30], sr2], false);
+}
+
+window.addEventListener('load', drawArrows);
+window.addEventListener('resize', drawArrows);
+</script>
+
+</body>
+</html>

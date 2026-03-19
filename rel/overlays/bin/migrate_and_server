@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+
+echo "[entrypoint] Running migrations..."
+/app/bin/agentic_ui eval "AgenticUi.Release.migrate()"
+echo "[entrypoint] Migrations done. Starting server..."
+exec /app/bin/server
