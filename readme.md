@@ -111,9 +111,9 @@ The included widgets are a **demo** (e-commerce marketplace with products from D
 | `DATABASE_URL` | No | — | PostgreSQL URL (optional, app works in-memory) |
 | `SECRET_KEY_BASE` | Prod | — | Generate with `mix phx.gen.secret` |
 
-## Production (Dockerfile)
+## Production / Deployment
 
-Build the image and provide environment variables externally:
+### Docker (standalone)
 
 ```bash
 docker build -t agentic-ui .
@@ -126,6 +126,23 @@ docker run -p 4000:4000 \
 ```
 
 For Easypanel or similar platforms, point to the Dockerfile and set env vars in the dashboard.
+
+### Kubernetes (Kind — local)
+
+Deploy locally with a single command:
+
+```bash
+cp .env.k8s.dev.example .env.k8s.dev   # Edit: add your keys
+./k8s/kind/deploy.sh .env.k8s.dev
+```
+
+App at http://localhost:30080. Destroy with `./k8s/kind/destroy.sh`.
+
+See [docs/private/cluster-kind.md](docs/private/cluster-kind.md) for the step-by-step guide.
+
+### Kubernetes (AWS EKS)
+
+See [docs/private/cluster-eks.md](docs/private/cluster-eks.md) for the full guide: ECR, EKS cluster, secrets, deploy, and teardown.
 
 ## Project Structure
 
