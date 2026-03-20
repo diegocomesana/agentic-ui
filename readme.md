@@ -8,6 +8,8 @@ This is not a chatbot with buttons. This is a complete, functional UI where an A
 
 > Built for any business: e-commerce, catalogs, dashboards, internal tools. Swap the widgets, swap the prompt, and it's yours.
 
+> **Note:** This project is not accepting pull requests or contributions at this time. Feel free to fork it and make it your own.
+
 ---
 
 ### Built with Claude, built for Claude
@@ -216,7 +218,6 @@ See `business/CLAUDE.md` for a complete guide on creating widgets, descriptors, 
 - [Architecture](docs/ARCHITECTURE.md) — Design principles, patterns, data flow, contracts
 - [E2E Tests](docs/e2e-tests.md) — Playwright test suite (T1-T8)
 - [Architecture Diagram](docs/architecture-diagram.html) — Interactive visual diagram
-- [Competitive Research](docs/private/agentic-ui-landscape-2026.md) — Agentic UI landscape analysis
 
 ## Commands
 
