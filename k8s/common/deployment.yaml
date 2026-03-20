@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: IMAGE_PLACEHOLDER
+          image: ${IMAGE}
           ports:
             - containerPort: 4000
           env:

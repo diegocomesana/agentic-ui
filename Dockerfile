@@ -42,12 +42,12 @@ COPY priv priv
 COPY assets assets
 COPY rel rel
 
-# Compile assets
-RUN mix assets.deploy
-
 # Compile the release (copy runtime config)
 COPY config/runtime.exs config/
 RUN mix compile
+
+# Compile assets (after mix compile — phoenix-colocated generates JS during compilation)
+RUN mix assets.deploy
 
 # Build the release
 RUN mix release

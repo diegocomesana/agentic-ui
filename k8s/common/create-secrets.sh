@@ -5,10 +5,10 @@ ENV_FILE="${1:-.env.k8s.prod}"
 
 if [ ! -f "$ENV_FILE" ]; then
   echo "Error: $ENV_FILE not found"
-  echo "Usage: ./k8s/create-secrets.sh [env-file]"
+  echo "Usage: ./k8s/common/create-secrets.sh [env-file]"
   echo "Examples:"
-  echo "  ./k8s/create-secrets.sh              # reads .env.k8s.prod"
-  echo "  ./k8s/create-secrets.sh .env.k8s.dev # reads .env.k8s.dev"
+  echo "  ./k8s/common/create-secrets.sh              # reads .env.k8s.prod"
+  echo "  ./k8s/common/create-secrets.sh .env.k8s.dev # reads .env.k8s.dev"
   exit 1
 fi
 
