@@ -216,7 +216,7 @@ See `business/CLAUDE.md` for a complete guide on creating widgets, descriptors, 
 - [Architecture](docs/ARCHITECTURE.md) — Design principles, patterns, data flow, contracts
 - [E2E Tests](docs/e2e-tests.md) — Playwright test suite (T1-T8)
 - [Architecture Diagram](docs/architecture-diagram.html) — Interactive visual diagram
-- [Competitive Research](research/agentic-ui-landscape-2026.md) — Agentic UI landscape analysis
+- [Competitive Research](docs/private/agentic-ui-landscape-2026.md) — Agentic UI landscape analysis
 
 ## Commands
 
