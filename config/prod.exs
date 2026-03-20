@@ -8,15 +8,11 @@ import Config
 config :agentic_ui, AgenticUiWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json"
 
-# Force using SSL in production. This also sets the "strict-security-transport" header,
-# known as HSTS. If you have a health check endpoint, you may want to exclude it below.
-# Note `:force_ssl` is required to be set at compile-time.
-config :agentic_ui, AgenticUiWeb.Endpoint,
-  force_ssl: [rewrite_on: [:x_forwarded_proto]],
-  exclude: [
-    # paths: ["/health"],
-    hosts: ["localhost", "127.0.0.1"]
-  ]
+# SSL is terminated at the Kubernetes Ingress/LoadBalancer, not in Phoenix.
+# The app runs plain HTTP inside the cluster.
+# If deploying without K8s and needing SSL at the app level, uncomment:
+# config :agentic_ui, AgenticUiWeb.Endpoint,
+#   force_ssl: [rewrite_on: [:x_forwarded_proto]]
 
 # Do not print debug messages in production
 config :logger, level: :info

@@ -11,6 +11,9 @@ defmodule AgenticUiWeb.Endpoint do
     same_site: "Lax"
   ]
 
+  # Health check for Kubernetes probes (before any SSL redirect)
+  plug AgenticUiWeb.Plugs.HealthCheck
+
   socket "/live", Phoenix.LiveView.Socket,
     websocket: [connect_info: [session: @session_options]],
     longpoll: [connect_info: [session: @session_options]]
