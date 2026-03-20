@@ -119,7 +119,7 @@ docs/                              # Documentation
 - **Mechanical events** (pagination) vs **semantic events** (go to agent)
 - **JSON mode** agent: responds `{message, widgets, layout}`
 - **Embedded MCP tools**: defined in MCP-standard format (`inputSchema`), provider converts to native format
-- **Multi-turn tool calling**: agent makes up to 10 tool calls per invocation, evaluates results, decides next action
+- **Multi-turn tool calling**: agent makes up to 20 tool calls per invocation, evaluates results, decides next action
 - **AgentScheduler** pure state machine: serializes invocations, discards stale results, auto-reinvokes
 - **Task.async** for agent invocation (doesn't block LiveView)
 - **Pluggable reducers**: descriptors declare `reducer: {Module, :function}` on events

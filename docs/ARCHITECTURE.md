@@ -604,7 +604,8 @@ Store.from_persistable(data) -> store
 AgentScheduler.new() -> scheduler
 AgentScheduler.request_invocation(scheduler) -> {:invoke, scheduler} | {:queued, scheduler}
 AgentScheduler.notify_state_changed(scheduler) -> scheduler
-AgentScheduler.task_completed(scheduler) -> {:reinvoke, scheduler} | {:idle, scheduler}
+AgentScheduler.task_completed(scheduler) -> {:reinvoke, scheduler} | {:idle, scheduler} | {:stale, scheduler}
+AgentScheduler.reset(scheduler) -> scheduler
 AgentScheduler.busy?(scheduler) -> boolean
 
 # Agent: invokes LLM, returns result.
