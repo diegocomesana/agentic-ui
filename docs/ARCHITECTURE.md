@@ -175,6 +175,7 @@ lib/
         chat.ex                    # Chat component (shared, not business-specific)
     plugs/
       guest_plug.ex                # Guest token cookie assignment
+      health_check.ex              # /healthz endpoint for Kubernetes probes
 
 business/                          # Business Layer (YOUR code — edit only this)
   ui_config.ex                     # Branding, labels, visibility toggles, state summarizer
